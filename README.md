@@ -57,7 +57,7 @@ Fresnel decomposes text into a few main layers:
 
 ---
 
-## 📦 Installation & Usage
+## Installation & Usage
 
 1.  **Clone the repository**
     ```bash
@@ -82,4 +82,4 @@ I intend to keep adding new features to Fresnel. The goal is to enable it to unl
 timeline since I'll be working on Fresnel while juggling uni. On that note, the features I aim to implement next are:
 1. Implement a few more evaluation insights such as features that assess too much use of adverbs as 'crutches' and points out where they should be replaced with better sounding words, etc.
 2. A proper GUI or TUI at the very least.
-3. Interactive graphs or aligned features to visualise the characteristics. 
+3. Interactive graphs or aligned features to visualise the characteristics (using d3.js perhaps)
