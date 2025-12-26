@@ -9,6 +9,7 @@ from statistics import variance
 def get_words(text):
 # cleans and tokenizes words from the text"
     text = re.sub(r'[^\w\s]', '', text)
+    return text.lower().split()
 
 def get_sentences(text):
     # Split by period, exclamation, or question mark
@@ -117,7 +118,7 @@ calculates the readability of any text using the Flesh-Kincaid formula
 """
 def readability(sentences, words):
     if not sentences or not words: return 0
-    def syllabes(words):
+    def syllables(words):
         return len(re.findall(r'[aeiouy]+', words))
         total_syllables = sum(count_syllables(w) for w in words)
         avg_sentence_len = len(words) / len(sentences)
@@ -130,7 +131,6 @@ def readability(sentences, words):
 '''
 calculates how immersive the text is by taking note of sensory words
 '''
-
 
 def sensory_immersion(words):
     visual = {"see", "look", "bright", "dark", "blue", "red", "shiny", "vision"}
@@ -145,12 +145,63 @@ def sensory_immersion(words):
         elif w in tactile:
             counts["tactile"] += 1
     return counts
+'''
+calculates how many pronouns (ego graph) are there in a text
+'''
 
+def pronouns(words):
+    first_person = {"i", "me", "my", "mine", "myself"}
+    collective = {"we", "us", "our", "ours", "ourselves"}
+    second_person = {"you", "your", "yours"}
+    counts = {"I/Me": 0, "We/Us": 0, "You": 0}
+    for w in words:
+        if w in first_person:
+            counts["I/Me"] += 1
+        elif w in collective:
+            counts["We/Us"] += 1
+        elif w in second_person:
+            counts["You"] += 1
+    return counts
 
+'''
+counts modal verbs as a way of assessing confidence in the text
+'''
+def modal_verbs(words):
+    necessity = {"must", "should", "always", "will", "shall"}
+    possibility = {"might", "could", "maybe", "perhaps", "possibly"}
+    counts = {"necessity": 0, "possibility": 0}
+    for w in words:
+        if w in necessity:
+            counts["necessity"] += 1
+        elif w in possibility:
+            counts["possibility"] += 1
+    return counts
 
+"""
+checks whether the author wrote the entire text by themselves or whether
+they used some sort of ghostwriter/AI assistance in between the text. done by
+determining the cosine similarity between excerpts of the text.
+"""
 
+def check_auth(words):
+    mid = len(words) // 2
+    first_half = words[:mid]
+    second_half = words[mid:]
+    target_words = {"the" , "and", "is", "in", "to", "of", "a", "that", "it", "on"}
 
+    def get_vec(w_list):
+        c = Counter(w_list)
+        return [c[t] for t in target_words]
+    vec1 = get_vec(first_half)
+    vec2 = get_vec(second_half)
 
+    # to calculate hte cosine similarity
+    dot_prod = sum(a*b for a, b, in zip(vec1, vec2))
+    mag1 = math.sqrt(sum(a*a for a in vec1))
+    mag2 = math.sqrt(sum(b*b for b in vec2))
+
+    if mag1 * mag2 == 0: return 0
+    return dot_prod / (mag1 * mag2)
 
 
 
