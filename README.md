@@ -8,8 +8,6 @@
 
 **Deep Text Analysis. 100% Deterministic.**
 
-[Features](#-key-features) • [Installation](#-installation--usage) • [Roadmap](#-future-implementation-plan)
-
 </div>
 
 ---
